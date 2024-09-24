@@ -196,28 +196,31 @@ class _DrawingBoardState extends State<DrawingBoard> {
   Widget get _buildBoard {
     return RepaintBoundary(
       key: _controller.painterKey,
-      child: ExValueBuilder<DrawConfig>(
-        valueListenable: _controller.drawConfig,
-        shouldRebuild: (DrawConfig p, DrawConfig n) =>
-            p.angle != n.angle || p.size != n.size,
-        builder: (_, DrawConfig dc, Widget? child) {
-          Widget c = child!;
+      child: ColoredBox(
+        color: Colors.white,
+        child: ExValueBuilder<DrawConfig>(
+          valueListenable: _controller.drawConfig,
+          shouldRebuild: (DrawConfig p, DrawConfig n) =>
+              p.angle != n.angle || p.size != n.size,
+          builder: (_, DrawConfig dc, Widget? child) {
+            Widget c = child!;
 
-          if (dc.size != null) {
-            final bool isHorizontal = dc.angle.toDouble() % 2 == 0;
-            final double max = dc.size!.longestSide;
+            if (dc.size != null) {
+              final bool isHorizontal = dc.angle.toDouble() % 2 == 0;
+              final double max = dc.size!.longestSide;
 
-            if (!isHorizontal) {
-              c = SizedBox(width: max, height: max, child: c);
+              if (!isHorizontal) {
+                c = SizedBox(width: max, height: max, child: c);
+              }
             }
-          }
 
-          return Transform.rotate(angle: dc.angle * pi / 2, child: c);
-        },
-        child: Center(
-          child: Stack(
-            alignment: Alignment.center,
-            children: <Widget>[_buildImage, _buildPainter],
+            return Transform.rotate(angle: dc.angle * pi / 2, child: c);
+          },
+          child: Center(
+            child: Stack(
+              alignment: Alignment.center,
+              children: <Widget>[_buildImage, _buildPainter],
+            ),
           ),
         ),
       ),
